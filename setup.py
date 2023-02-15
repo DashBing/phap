@@ -27,9 +27,8 @@ setuptools.setup(
         "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        #"Operating System :: Microsoft :: Windows",
-        #"Natural Language :: English",
-        #"Natural Language :: Chinese (Simplified)",
+        "Natural Language :: English",
+        "Natural Language :: Chinese (Simplified)",
     ],
     #install_requires=[],  #依赖项定义
     #entry_points={'console_scripts': ['name = pkg:function',],},  #scripts定义
