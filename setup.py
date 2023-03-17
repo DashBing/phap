@@ -32,7 +32,7 @@ setuptools.setup(
         "Natural Language :: Chinese (Simplified)",
     ],
     #install_requires=[],  #依赖项定义
-    entry_points={'console_scripts': ['test-stralgo = stralgo-tools:test',],},  #scripts定义
+    #entry_points={'console_scripts': ['test-stralgo = stralgo-tools:test',],},  #scripts定义
     package_dir={"": "src"},  #包名和值的目录 有效包存放根目录
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.9",  #支持版本
