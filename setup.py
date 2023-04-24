@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="stralgo",
-    version="0.1.2b1",  #版本
+    version="1.1.0b1",  #版本
     author="DashBing",
     author_email="mcbbkf@outlook.com",
     description="A Python library for various string algorithms",
