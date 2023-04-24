@@ -1,9 +1,9 @@
 python := python
 make := make
 
-all:
-	$(make) build
-	$(make) upload
+#all:
+#	$(make) build
+#	$(make) upload
 
 build:
 	$(python) -m build
