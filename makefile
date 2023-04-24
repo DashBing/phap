@@ -10,6 +10,7 @@ build:
 
 upload:
 	$(python) -m twine upload ./dist/*
+	mv ./dist/* ./dist-history
 
 init:
 	$(python) -m pip install -U build
