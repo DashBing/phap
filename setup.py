@@ -4,18 +4,18 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="stralgo",
-    version="1.2.0",  #版本
+    name="phap",
+    version="2.0.0",  #版本
     author="DashBing",
     author_email="mcbbkf@outlook.com",
-    description="A Python library for various string algorithms",
+    description="Programing Helpful Algorithm Package",
     long_description=long_description,
     long_description_content_type="text/markdown",
     #scripts=[],
-    url="https://github.com/DashBing/stralgo/",
-    #project_urls={
-    #    "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
-    #},  #额外链接
+    url="https://github.com/DashBing/phap/",
+    project_urls={
+        "Github": "https://github.com/DashBing/phap/",
+    },  #额外链接
     classifiers=[
         #"Development Status :: 1 - Planning",
         #"Development Status :: 2 - Pre-Alpha",
