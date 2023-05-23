@@ -10,4 +10,5 @@ Programing Helpful Algorithm Package
 + v1.1.1 (stralgo)
 
 # Build
-> There is nothing.
+## On Windows
+```make build```
