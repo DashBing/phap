@@ -10,7 +10,7 @@ Programing Helpful Algorithm Package
 ## Stable
 + v0.1.0 (stralgo)
 + v1.1.1 (stralgo)
-+ v2.0.1
++ v2.1.0
 
 # Build
 ## On Windows
