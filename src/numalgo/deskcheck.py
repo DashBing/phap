@@ -1,3 +1,9 @@
+from ..phap import ErrorTemplate
+
+class phap_numalgo_deskcheck_DataNotTrueError(ErrorTemplate):
+    message = "The value is not true."
+    info_list = ["Try to change a new value."]
+
 def deskcheck(
         array : list = None,
         start_group : list = [0,0],  # [(0在上 | 1从下), (从左往右数的组数)]
