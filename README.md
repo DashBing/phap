@@ -3,6 +3,7 @@ Programing Helpful Algorithm Package
 
 ## Links
 [Github](https://github.com/DashBing/phap/ "Github")
+[Pypi](https://pypi.org/project/phap/ "Pypi")
 
 # Versions
 ## Stable
