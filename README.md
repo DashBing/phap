@@ -12,7 +12,10 @@
 ## Stable
 + v0.1.0 (stralgo)
 + v1.1.1 (stralgo)
-+ v2.1.0
++ v2.1.2
+
+## Latest Version
++ v2.1.2
 
 # Build
 ## Precondition
