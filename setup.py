@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="phap",
-    version="2.1.0",  #版本
+    version="2.1.1",  #版本
     author="DashBing",
     author_email="mcbbkf@outlook.com",
     description="Programing Helpful Algorithm Package",
@@ -30,7 +30,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
         #"Operating System :: Microsoft :: Windows",
         "Natural Language :: English",
-        #"Natural Language :: Chinese (Simplified)",
+        "Natural Language :: Chinese (Simplified)",
     ],
     #install_requires=[],  #依赖项定义
     #entry_points={'console_scripts': ['test-stralgo = stralgo-tools:test',],},  #scripts定义

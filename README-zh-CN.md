@@ -1,30 +1,32 @@
 # phap
 ### Programing Helpful Algorithm Package
-### Powered by Python 3.11
+#### 一个对编程有帮助的算法包
+### 本项目由Python3.11环境下编写，资源在该环境下编译
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://choosealicense.com/licenses/mit/)
+### [English](README.md)  | 简体中文
 
-### English  | [简体中文](README-zh-CN.md)
-
-# Links
+# 项目链接
 [Github](https://github.com/DashBing/phap/ "Github") | [Pypi](https://pypi.org/project/phap/ "Pypi") | [Pypi (stralgo)](https://pypi.org/project/stralgo/ "Pypi (stralgo)")
 
-# Versions
-## Stable
+# 版本
+## 稳定版
 + v0.1.0 (stralgo)
 + v1.1.1 (stralgo)
 + v2.1.0
 
-# Build
-## Precondition
-+ Install git and make tools
-+ Install Python(the version 3.9 or the version 3.11)
-+ Clone source code from source repository
+# 从源码构建
+## 准备工作
++ 安装git和make (方法自行百度)
++ 安装Python(3.9版本或者3.11版本皆可)
++ 从源码仓库克隆源代码
 #### ```git clone git@github.com:DashBing/phap.git```
-#### or
+#### 或者
 #### ```git clone https://github.com/DashBing/phap.git```
+### 国内网比较差可以尝试：
+#### ```git clone https://kgithub.com/DashBing/phap.git```
 
-## Initialize packaging environment
+## 初始化打包环境
 ```make init```
 
-## Build release
+## 构建包
 ```make build```

@@ -1,9 +1,10 @@
-python := python
 make := make
 ifeq ($(OS),Windows_NT)
 	mv := move
+	python := python
 else
 	mv := mv
+	python := python3
 endif
 
 #all:
