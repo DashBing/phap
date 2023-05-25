@@ -15,7 +15,7 @@
 + v2.1.2
 
 ## Latest Version
-+ v2.1.2
++ v2.2.0-beta1
 
 # Build
 ## Precondition
