@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="phap",
-    version="2.2.1b1",  #版本
+    version="2.2.1b2",  #版本
     author="DashBing",
     author_email="mcbbkf@outlook.com",
     description="Programing Helpful Algorithm Package",
@@ -37,4 +37,5 @@ setuptools.setup(
     package_dir={"": "src"},  #包名和值的目录 有效包存放根目录
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.9",  #支持版本
+    #platforms=["Windows"],  #支持系统
 )
