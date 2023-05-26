@@ -2,6 +2,8 @@ from .numalgo import *
 from .stralgo import *
 from random import randint
 
+__version__ = "2.2.1"
+
 class ErrorTemplate(Exception):  # 错误模板
     message = ""
     info_list = []
