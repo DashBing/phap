@@ -252,8 +252,21 @@ def sm3_int_hex(
             v_n=CF(m,i,i)
         #print(V[-1])
         return V[-1]
-    hash()
+    return(hash())
+
+def str_to_int(text:str) -> str:
+    s = ""
+    text = list(text)
+    for i in text:
+        s = s + str(ord(i))
+    #print(s)
+    return(s)
+
+def sm3(text:str, IV:str='7380166f4914b2b9172442d7da8a0600a96f30bc163138aae38dee4db0fb0e4e') -> str:
+    s = str_to_int(text)
+    s = sm3_int_hex(m=s, IV=IV)
+    return(s)
 
 if __name__ == "__main__":
     while True:
-        print(sm3_int_hex(m=input()))
+        print(sm3(text=input()))
