@@ -1,241 +1,259 @@
-# -*- coding:utf-8 -*-
- 
-"""
-:author: liyebei
-:date: 2022-08-06
-:description: SM3加密算法。 适用于python2.7+, python3.5+(用python3时暂不支持对中文的加密)
-"""
- 
-# 初始值
-iv = 0x7380166f4914b2b9172442d7da8a0600a96f30bc163138aae38dee4db0fb0e4e
-MAX = 2 ** 32
- 
- 
-def str2bin(msg):
-    """
-    字符串转比特串
-    :param msg: 字符串
-    :return: 转换之后的比特串
-    """
-    l = len(msg)
-    s_dec = 0
-    for m in msg:
-        s_dec = s_dec << 8
-        s_dec += ord(m)
-    msg_bin = bin(s_dec)[2:].zfill(l * 8)
-    return msg_bin
- 
- 
-def int2bin(a, k):
-    """
-    将整数转化为比特串
-    :param a: 待转化的整数
-    :param k: 比特串的长度
-    :return: 转化后长度为k的比特串
-    """
-    return bin(a)[2:].zfill(k)
- 
- 
-def int2hex(a, k):
-    """
-    整数转化为16进制的字符串，前补0补齐k位数
-    :param a: 整数
-    :param k: 补齐后的字符串长度
-    :return: 转化后的16进制形式字符串
-    """
-    return hex(a)[2:].zfill(k)
- 
- 
-def bin2hex(a, k):
-    """
-    比特串转化为16进制的字符串，前补0补齐k位数
-    :param a: 待转化的比特串
-    :param k: 补齐后的字符串长度
-    :return: 长度为k的16进制字符串
-    """
-    #return hex(int(a, 2))[2:].zfill(k)
-    #对于python2需去除长整型引入的字符L
-    return hex(int(a, 2))[2:].replace('L', '').zfill(k)
- 
- 
-def msg_fill(msg_bin):
-    """
-    对消息进行填充。填充后的消息满足:(l+1+k) mod 512 = 448 k取最小值
-    :param msg_bin: 比特串形式的消息
-    :return: 填充后的消息（比特串形式）
-    """
-    l = len(msg_bin)
-    k = 448 - (l + 1) % 512
-    if k < 0:
-        k += 512
- 
-    l_bin = int2bin(l, 64)
-    msg_filled = msg_bin + '1' + '0' * k + l_bin
- 
-    return msg_filled
- 
- 
-def iteration_func(msg):
-    """
-    迭代压缩
-    :param msg: 填充后的比特串消息
-    :return: 迭代压缩后的消息，长度为64的字符串
-    """
-    # 将填充后的消息按512比特进行分组
-    n = len(msg) // 512
-    b = []
-    for i in range(n):
-        b.append(msg[512 * i:512 * (i + 1)])
- 
-    # 对消息进行迭代压缩
-    v = [int2bin(iv, 256)]
-    for i in range(n):
-        v.append(cf(v[i], b[i]))
- 
-    return bin2hex(v[n], 64)
- 
- 
-def msg_extension(bi):
-    """
-    消息扩展, 将消息分组bi扩展生成132个字W0, W1, · · · , W67, W0', W1', · · · , W63'，用于压缩函数CF
-    :param bi: 填充后的消息分组,长度为512的比特串
-    :return: w, w1 扩展后的消息，w为68字的list, w1为64字的list。字以整数存储
-    """
-    # 将消息分组Bi划分为16个字W0, W1, · · · , W15
-    w = []
-    for j in range(16):
-        w.append(int(bi[j * 32:(j + 1) * 32], 2))
- 
-    for j in range(16, 68):
-        w_j = p1(w[j - 16] ^ w[j - 9] ^ rotate_left(w[j - 3], 15)) ^ rotate_left(w[j - 13], 7) ^ w[j - 6]
-        w.append(w_j)
- 
-    w1 = []
-    for j in range(64):
-        w1.append(w[j] ^ w[j + 4])
- 
-    return w, w1
- 
- 
-def cf(vi, bi):
-    """
-    压缩函数
-    :param vi: 比特串（256位)
-    :param bi: 填充后的消息分组（512位比特串）
-    :return: 压缩后的比特串（256位)
-    """
-    # 对bi进行消息扩展
-    w, w1 = msg_extension(bi)
- 
-    # 将vi拆分为 a~h 8个字
-    t = []
-    for i in range(8):
-        t.append(int(vi[i * 32:(i + 1) * 32], 2))
-    a, b, c, d, e, f, g, h = t
- 
-    for j in range(64):
-        ss1 = rotate_left((rotate_left(a, 12) + e + rotate_left(t_j(j), j)) % MAX, 7)
-        ss2 = ss1 ^ rotate_left(a, 12)
-        tt1 = (ff(a, b, c, j) + d + ss2 + w1[j]) % MAX
-        tt2 = (gg(e, f, g, j) + h + ss1 + w[j]) % MAX
-        d = c
-        c = rotate_left(b, 9)
-        b = a
-        a = tt1
-        h = g
-        g = rotate_left(f, 19)
-        f = e
-        e = p0(tt2)
- 
-    vi_1 = int2bin(a, 32) + int2bin(b, 32) + int2bin(c, 32) + int2bin(d, 32) \
-        + int2bin(e, 32) + int2bin(f, 32) + int2bin(g, 32) + int2bin(h, 32)
-    vi_1 = int(vi_1, 2) ^ int(vi, 2)
- 
-    return int2bin(vi_1, 256)
- 
- 
-def rotate_left(a, k):
-    """
-    （字）循环左移k比特运算
-    :param a: 待按位左移的比特串
-    :param k: 左移位数
-    :return:
-    """
-    k = k % 32
-    return ((a << k) & 0xFFFFFFFF) | ((a & 0xFFFFFFFF) >> (32 - k))
- 
- 
-def p0(x):
-    """
-    置换函数P0
-    :param x: 待置换的消息（字）
-    :return: 置换后的消息（字）
-    """
-    return x ^ rotate_left(x, 9) ^ rotate_left(x, 17)
- 
- 
-def p1(x):
-    """
-    置换函数P1
-    :param x: 待置换的消息（字）
-    :return: 置换后的消息（字）
-    """
-    return x ^ rotate_left(x, 15) ^ rotate_left(x, 23)
- 
- 
-def t_j(j):
-    """
-    常量
-    """
-    if j <= 15:
-        return 0x79cc4519
-    else:
-        return 0x7a879d8a
- 
- 
-def ff(x, y, z, j):
-    """
-    布尔函数ff
-    """
-    if j <= 15:
-        return x ^ y ^ z
-    else:
-        return (x & y) | (x & z) | (y & z)
- 
- 
-def gg(x, y, z, j):
-    """
-    布尔函数gg
-    """
-    if j <= 15:
-        return x ^ y ^ z
-    else:
-        return (x & y) | ((x ^ 0xFFFFFFFF) & z)
- 
- 
-def sm3(msg):
-    """
-    sm3加密主函数
-    :param msg: 待加密的字符串
-    :return: sm3加密后的字符串
-    """
-    # 字符串转化为比特串
-    s_bin = str2bin(msg)
- 
-    # 对消息进行填充
-    s_fill = msg_fill(s_bin)
- 
-    # 对填充后的消息进行迭代压缩
-    # 对于python2需要删除因长整型而引入的末尾的L字符，python3不存在该问题
-    return s_sm3.upper().replace("L", "")
- 
- 
+def sm3_int_hex(
+        m='61626364616263646162636461626364616263646162636461626364616263646162636461626364616263646162636461626364616263646162636461626364',
+        IV='7380166f4914b2b9172442d7da8a0600a96f30bc163138aae38dee4db0fb0e4e'
+    ):
+    #填充函数
+    def filling(m):
+        #消息m是一个16进制字符串
+        #直接加16进制比较好
+        #61626364616263646162636461626364616263646162636461626364616263646162636461626364616263646162636461626364616263646162636461626364
+
+        #a = int(m,16)
+        #b = bin(a)[2:]#消息转换为二进制
+        length_b = len(m)*4#记录消息的长度
+        #s1='{:04b}'.format(s1)
+        b = m
+        b = b + '8'#补 1
+        c = len(b)%128
+        c = 112 - c#补 0 的个数
+        d = '0'*c
+        b = b + d#补 0
+        length_m = '{:016x}'.format(length_b)#也是16进制
+        b = b + length_m#填充完毕
+        #b = int(b)
+        #b = hex(b)[2:]
+        return b
+
+    #分组函数
+    def fenzu(m):
+        m = filling(m)
+        len_m = len(m)/128
+        m_list = []
+        for i in range(int(len_m)):
+            a = m[0+128*i:+128*(i+1)]
+            m_list.append(a)
+        return m_list
+
+    #扩展函数
+    def expand(m,n):#n代表是第几组消息，消息之间没有关系，不用迭代
+        B = fenzu(m)#列表
+        W = ['0' for i in range(68)]
+        W_0 = ['0' for i in range(64)]
+        for i in range(int(len(B[n])/8)):#128/8=16个字
+            w = B[n][i*8:(i+1)*8]
+            W[i] = w
+        for j in range(16,68):
+            a = or_16(W[j-16],W[j-9])
+
+            W_j_3 = Cyc_shift(W[j-3],15)
+            #print(W_j_3)
+            a = or_16(a,W_j_3)
+
+            a = Replace_P1(a)
+            #print(a)
+            W_j_13=Cyc_shift(W[j-13],7)
+            a = or_16(a,W_j_13)
+            a = or_16(a,W[j-6])
+            W[j]=a
+        #return W
+        for j in range(64):
+            W_0[j]=or_16(W[j],W[j+4])
+        return W,W_0
+
+    #置换函数
+    def Replace_P1(X):
+        #X为32位字
+        X_15 = Cyc_shift(X,15)  #循环移位
+        X_23 = Cyc_shift(X,23)
+        a = or_16(X,X_15)
+        a = or_16(a,X_23)
+        return a
+
+    #置换函数
+    def Replace_P0(X):
+        #X为32位字
+        X_9 = Cyc_shift(X,9)
+        X_17 = Cyc_shift(X,17)
+        a = or_16(X,X_9)
+        a = or_16(a,X_17)
+        return a
+
+    #异或函数
+    def or_16(A,B):
+        A = int(A,16)
+        B = int(B,16)
+        C = A ^ B
+        C = '{:08x}'.format(C)
+        return C
+
+    #循环移位函数
+    def Cyc_shift(W,n):
+        a = int(W,16)
+        a = '{:032b}'.format(a)
+        while n>=32:
+            n=n-32
+        a = a[n:] + a[:n]
+        a = int(a,2)
+        a = '{:08x}'.format(a)
+        return a
+
+    #常量Tj
+    def T_j(j):
+        if j<=15:
+            T_j='79cc4519'
+        else:
+            T_j='7a879d8a'
+        return T_j
+
+    #mod 2^32 算术加运算
+    def add(x,y):
+        x = int(x,16)
+        x = '{:032b}'.format(x)
+        x = list(x)
+        y = int(y, 16)
+        y = '{:032b}'.format(y)
+        y = list(y)
+        #print(x)
+        #print(y)
+        a = [0 for _ in range(32)]
+        carry = 0
+        for i in range(32):
+            m = int(x[31-i])+int(y[31-i])+carry
+            if m>=2:
+                d=m-2
+                a[31-i]=str(d)
+                carry=1
+            else:
+                carry=0
+                d=m
+                a[31 - i] = str(d)
+        #print(a)
+        b=''.join(a)
+        b=int(b,2)
+        b='{:08x}'.format(b)
+        return b
+
+    #布尔函数
+    def FF_j(X,Y,Z,j):
+        if j<=15:
+            a = or_16(X,Y)
+            a = or_16(a,Z)
+        else:
+            a = and_Cal(X,Y)
+            b = and_Cal(X,Z)
+            c = and_Cal(Y,Z)
+            a = or_Cal(a,b)
+            a = or_Cal(a,c)
+        return a
+
+    #布尔函数
+    def GG_j(X, Y, Z, j):
+        if j <= 15:
+            a = or_16(X, Y)
+            a = or_16(a, Z)
+        else:
+            a = and_Cal(X,Y)
+            b = qufan(X)
+            b = and_Cal(b,Z)
+            a = or_Cal(a,b)
+        return a
+
+    #与运算函数
+    def and_Cal(a,b):
+        a = int(a,16)
+        b = int(b,16)
+        a_b = a & b
+        a_b = '{:08x}'.format(a_b)
+        return a_b
+
+    #或运算函数
+    def or_Cal(a,b):
+        a = int(a, 16)
+        b = int(b, 16)
+        a_b = a | b
+        a_b = '{:08x}'.format(a_b)
+        return a_b
+
+    #按位取反函数
+    def qufan(A):
+        A = int(A,16)
+        A = '{:032b}'.format(A)
+        A = list(A)
+        for i in range(32):
+            if A[i]=='0':
+                A[i]='1'
+            else:
+                A[i]='0'
+        A = ''.join(A)
+        A = int(A,2)
+        A = '{:08x}'.format(A)
+        return A
+
+    #压缩函数
+    m_list = fenzu(m)
+    m_len = len(m_list)
+    V = ['0' for i in range(m_len+1)]
+    V[0]=IV
+
+    #压缩函数
+    def CF(m,n,k):
+        w = expand(m, n)
+        W = w[0]
+        W_0 = w[1]
+        A=V[k][0:8]
+        B=V[k][8:16]
+        C=V[k][16:24]
+        D=V[k][24:32]
+        E=V[k][32:40]
+        F=V[k][40:48]
+        G=V[k][48:56]
+        H=V[k][56:64]
+        #print(W_0)
+        all=''
+        for j in range(64):
+            #print(E)
+            b= a = Cyc_shift(A,12)
+            #t = b
+            T = T_j(j)
+            #
+            T = Cyc_shift(T,j)#忘记移位了，移位问题
+            a = add(a,E)
+            a = add(a,T)
+            SS1 = Cyc_shift(a,7)
+            SS2 = or_16(SS1,b)
+            b = FF_j(A,B,C,j)
+            b = add(b,D)
+            b = add(b,SS2)
+            TT1 = add(b,W_0[j]) #
+            b = GG_j(E,F,G,j)
+            b = add(b, H)
+            b = add(b, SS1)
+            TT2 = add(b, W[j]) #
+            D = C
+            C = Cyc_shift(B,9)
+            B = A
+            A = TT1#
+            H = G
+            G = Cyc_shift(F,19)
+            F = E
+            E = Replace_P0(TT2) #
+            all = A+B+C+D+E+F+G+H
+            #print(all)
+        #V[k+1]=or_16(all,V[k])
+        #return V[k+1]
+        #print(t)
+        #return all
+        V[k+1]=or_16(V[k],all)
+
+    #print(CF(m,0,0))
+    #print(V)
+    def hash(m=m):
+        for i in range(m_len):
+            v_n=CF(m,i,i)
+        #print(V[-1])
+        return V[-1]
+    hash()
+
 if __name__ == "__main__":
-    s1 = 'abc'
- 
-    s1_sm3 = sm3(s1)
-    print("{} ==> {}".format(s1, s1_sm3))
- 
-    s2 = 'hello'
-    s2_sm3 = sm3(s2)
-    print("{} ==> {}".format(s2, s2_sm3))
+    while True:
+        print(sm3_int_hex(m=input()))
