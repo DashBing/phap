@@ -1,4 +1,4 @@
-from ..phap import ErrorTemplate
+from phap import ErrorTemplate
 
 class phap_numalgo_deskcheck_DataNotTrueError(ErrorTemplate):
     message = "The value is not true."
