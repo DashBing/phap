@@ -13,13 +13,14 @@
 + v0.1.0 (stralgo)
 + v1.1.1 (stralgo)
 + v2.1.2
++ v2.2.1
 
 ## Latest Available Version
-+ v2.2.0
++ v2.2.1
 
 ## Latest Version
 ### *(The data under the master branch is inaccurate. Please refer to the dev branch for details)*
-+ v2.2.1-rc1
++ v2.2.1
 
 # Build
 ## Precondition
