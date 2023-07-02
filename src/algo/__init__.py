@@ -1,5 +1,5 @@
-from .deskcheck import *
-from .treenode import *
+from .arraylib import *
+from .treelib import *
 
 __all__ = [
     "deskcheck",
