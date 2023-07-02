@@ -20,7 +20,7 @@
 
 ## Latest Version
 ### *(The data under the master branch is inaccurate. Please refer to the dev branch for details)*
-+ v3.0.0-alpha3
++ v3.0.0-beta1
 
 # Build
 ## Precondition
