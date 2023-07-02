@@ -7,6 +7,8 @@
 
 # 项目链接
 [Github](https://github.com/DashBing/phap/ "Github") | [Pypi](https://pypi.org/project/phap/ "Pypi") | [Pypi (stralgo)](https://pypi.org/project/stralgo/ "Pypi (stralgo)")
+<br><br>
+[Kgithub](https://kgithub.com/DashBing/phap/)：国内Github镜像站，可能会有延迟，推送请使用Github链接推送
 
 # 版本
 ## 稳定版本
@@ -20,7 +22,12 @@
 
 ## 最新版本
 ### *(master分支下数据不准确, 具体查看dev分支)*
-+ v3.0.0-beta2
++ v3.0.0-beta3
+
+# 使用
+## 阅读开发文档
+### *(尽量打开项目链接中的[Github](https://github.com/DashBing/phap/ "Github")链接打开，使用Pypi或其他链接可能会发生打不开的情况)*
++ [开发文档链接](doc/README.md)
 
 # 从源码构建
 ## 准备工作
