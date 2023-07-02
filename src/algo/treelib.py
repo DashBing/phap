@@ -36,8 +36,8 @@ class treenode:
         else:
             l.append(self.right)
         return(l)
-    def getnode(self) -> str:
-        #l = self.getlist()
-        return("")
-    def __str__(self) -> str:
-        return(self.getnode())
+    #def getnode(self) -> str:
+    #    l = self.getlist()
+    #    return("")
+    #def __str__(self) -> str:
+    #    return(self.getnode())
