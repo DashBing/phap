@@ -1,4 +1,4 @@
-import numalgo
+import algo
 import stralgo
 from random import randint
 
